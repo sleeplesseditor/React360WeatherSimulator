@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { AppRegistry, asset, Pano, Text, View } from 'react-vr';
+import { AppRegistry, asset, Pano, View } from 'react-vr';
 import WeatherCard from './vr/components/WeatherCard';
+import WindCloudObject from './vr/components/WindCloudObject';
 
 const api_key = 'bb436a3872095967e4e3e692b1690156';
 
@@ -9,13 +10,25 @@ class WeatherSimulator extends Component {
     super();
 
     this.state = {
-      weatherObject: {}
+      weatherObject: {
+        name: '',
+        main: {
+          temp: 0
+        },
+        weather: [
+          {description: ''}
+        ],
+        wind: {
+          deg: 1,
+          speed: 1
+        }
+      }
     }
   }
 
   componentDidMount() {
-    //Can change city query here
-    fetch(`http://api.openweathermap.org/data/2.5/weather?q=SanFrancisco&app=${api_key}`, {
+    //Can change city query here with OpenWeatherMap city id code
+    fetch(`http://api.openweathermap.org/data/2.5/weather?id=5391959&appid=${api_key}`, {
       method: 'GET'
     })
       .then(response => response.json())
@@ -32,6 +45,7 @@ class WeatherSimulator extends Component {
       >
         <Pano source={asset('lombard-vr.jpg')}></Pano>
         <WeatherCard weatherObject={this.state.weatherObject}/>
+        <WindCloudObject wind={this.state.weatherObject.wind}/>
       </View>
     )
   }
