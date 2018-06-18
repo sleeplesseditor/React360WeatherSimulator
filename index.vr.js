@@ -1,33 +1,39 @@
-import React from 'react';
-import {
-  AppRegistry,
-  asset,
-  Pano,
-  Text,
-  View,
-} from 'react-vr';
+import React, { Component } from 'react';
+import { AppRegistry, asset, Pano, Text, View } from 'react-vr';
+import WeatherCard from './vr/components/WeatherCard';
 
-export default class WeatherSimulator extends React.Component {
+const api_key = 'bb436a3872095967e4e3e692b1690156';
+
+class WeatherSimulator extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      weatherObject: {}
+    }
+  }
+
+  componentDidMount() {
+    //Can change city query here
+    fetch(`http://api.openweathermap.org/data/2.5/weather?q=SanFrancisco&app=${api_key}`, {
+      method: 'GET'
+    })
+      .then(response => response.json())
+      .then(json => this.setState({weatherObject: json}));
+  }
+
+  //Can change city image here
   render() {
     return (
-      <View>
-        <Pano source={asset('chess-world.jpg')}/>
-        <Text
-          style={{
-            backgroundColor: '#777879',
-            fontSize: 0.8,
-            fontWeight: '400',
-            layoutOrigin: [0.5, 0.5],
-            paddingLeft: 0.2,
-            paddingRight: 0.2,
-            textAlign: 'center',
-            textAlignVertical: 'center',
-            transform: [{translate: [0, 0, -3]}],
-          }}>
-          hello
-        </Text>
+      <View style={{
+        flex: 1, 
+        justifyContent: 'center', 
+        alignItems: 'center'}}
+      >
+        <Pano source={asset('lombard-vr.jpg')}></Pano>
+        <WeatherCard weatherObject={this.state.weatherObject}/>
       </View>
-    );
+    )
   }
 };
 
